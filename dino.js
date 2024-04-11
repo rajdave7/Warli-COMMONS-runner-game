@@ -1,11 +1,10 @@
-
-//board
+// The game board setup remains the same
 let board;
 let boardWidth = 750;
 let boardHeight = 250;
 let context;
 
-//dino
+// Dino setup remains mostly the same
 let dinoWidth = 88;
 let dinoHeight = 94;
 let dinoX = 50;
@@ -13,155 +12,185 @@ let dinoY = boardHeight - dinoHeight;
 let dinoImg;
 
 let dino = {
-    x : dinoX,
-    y : dinoY,
-    width : dinoWidth,
-    height : dinoHeight
-}
+    x: dinoX,
+    y: dinoY,
+    width: dinoWidth,
+    height: dinoHeight
+};
 
-//cactus
-let cactusArray = [];
+// New game elements arrays
+let obstacleArray = []; // Now holds trees, mountains, rivers, ponds, and other dinos
 
-let cactus1Width = 34;
-let cactus2Width = 69;
-let cactus3Width = 102;
+// New obstacle dimensions
+let treeWidthSmall = 180; // Small tree
+let treeWidthLarge = 180; // Large tree
+let obstacleHeight = 280; // Generalized for simplicity, can be adjusted per obstacle
 
-let cactusHeight = 70;
-let cactusX = 700;
-let cactusY = boardHeight - cactusHeight;
+// New images for game elements
+let treeSmallImg;
+let treeLargeImg;
+let mountainImg;
+let riverImg;
+let pondImg;
+let otherDinoImg;
 
-let cactus1Img;
-let cactus2Img;
-let cactus3Img;
-
-//physics
-let velocityX = -8; //cactus moving left speed
-let velocityY = 0;
+// Physics and game control variables remain the same
+let velocityX = -4; // Obstacles moving left speed
 let gravity = .4;
 
 let gameOver = false;
 let score = 0;
+let partyMode = false; // New variable to control party mode
 
 window.onload = function() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
 
-    context = board.getContext("2d"); //used for drawing on the board
+    context = board.getContext("2d"); // Used for drawing on the board
 
-    //draw initial dinosaur
-    // context.fillStyle="green";
-    // context.fillRect(dino.x, dino.y, dino.width, dino.height);
-
+    // Loading the dino image remains the same
     dinoImg = new Image();
-    dinoImg.src = "./img/dino.png";
+    dinoImg.src = "./img/stickman_normal.png";
     dinoImg.onload = function() {
         context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
-    }
+    };
 
-    cactus1Img = new Image();
-    cactus1Img.src = "./img/cactus1.png";
+    // Load new images for obstacles
+    treeSmallImg = new Image();
+    treeSmallImg.src = "./img/treeSmall.png";
 
-    cactus2Img = new Image();
-    cactus2Img.src = "./img/cactus2.png";
+    // treeLargeImg = new Image();
+    // treeLargeImg.src = "./img/treeLarge.png";
 
-    cactus3Img = new Image();
-    cactus3Img.src = "./img/cactus3.png";
+    mountainImg = new Image();
+    mountainImg.src = "./img/mountain.png";
 
+    // riverImg = new Image();
+    // riverImg.src = "./img/river.png";
+
+    // pondImg = new Image();
+    // pondImg.src = "./img/pond.png";
+
+    otherDinoImg = new Image();
+    otherDinoImg.src = "./img/stickman_normal.png";
+
+    // Initialize game loop and event listeners
     requestAnimationFrame(update);
-    setInterval(placeCactus, 1000); //1000 milliseconds = 1 second
+    setInterval(placeObstacle, 2000); // Adjust frequency and type of obstacles
     document.addEventListener("keydown", moveDino);
-}
+};
 
 function update() {
+    if (partyMode) {
+        // Implement party mode visuals here
+        // Example: draw many dinos dancing on the screen
+        return; // Skip the normal game loop
+    }
+
     requestAnimationFrame(update);
     if (gameOver) {
         return;
     }
+
     context.clearRect(0, 0, board.width, board.height);
 
-    //dino
+    // Dino movement handling remains the same
     velocityY += gravity;
-    dino.y = Math.min(dino.y + velocityY, dinoY); //apply gravity to current dino.y, making sure it doesn't exceed the ground
+    dino.y = Math.min(dino.y + velocityY, dinoY);
     context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
 
-    //cactus
-    for (let i = 0; i < cactusArray.length; i++) {
-        let cactus = cactusArray[i];
-        cactus.x += velocityX;
-        context.drawImage(cactus.img, cactus.x, cactus.y, cactus.width, cactus.height);
+    // Handling obstacles (now including trees, mountains, etc.)
+    for (let i = 0; i < obstacleArray.length; i++) {
+        let obstacle = obstacleArray[i];
+        obstacle.x += velocityX;
+        context.drawImage(obstacle.img, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
-        if (detectCollision(dino, cactus)) {
-            gameOver = true;
-            dinoImg.src = "./img/dino-dead.png";
-            dinoImg.onload = function() {
-                context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+        if (detectCollision(dino, obstacle)) {
+            if (obstacle.type === 'tree') {
+                score += obstacle.size === 'small' ? 5 : 10; // Increase score by tree size
+            } else if (obstacle.type === 'otherDino') {
+                score += 10; // Increase score for passing other dinos
             }
+            // No gameOver for touching obstacles, but you can implement different logic here
         }
     }
 
-    //score
-    context.fillStyle="black";
-    context.font="20px courier";
-    score++;
+    // Check for party mode activation
+    if (score >= 100 && !partyMode) {
+        startPartyMode();
+    }
+
+    // Score display remains the same
+    context.fillStyle = "black";
+    context.font = "20px courier";
     context.fillText(score, 5, 20);
 }
 
 function moveDino(e) {
-    if (gameOver) {
+    // Dino movement control remains the same
+    if (gameOver || partyMode) {
         return;
     }
 
     if ((e.code == "Space" || e.code == "ArrowUp") && dino.y == dinoY) {
-        //jump
-        velocityY = -10;
+        velocityY = -10; // Jump
     }
-    else if (e.code == "ArrowDown" && dino.y == dinoY) {
-        //duck
-    }
-
+    // Implement ducking or other controls if desired
 }
 
-function placeCactus() {
-    if (gameOver) {
+function placeObstacle() {
+    if (gameOver || partyMode) {
         return;
     }
 
-    //place cactus
-    let cactus = {
-        img : null,
-        x : cactusX,
-        y : cactusY,
-        width : null,
-        height: cactusHeight
-    }
+    // Place a new obstacle with randomized type (tree, mountain, etc.)
+    let obstacleChance = Math.random();
+    let obstacle = {
+        img: null,
+        x: boardWidth, // Start from the right edge
+        y: boardHeight - obstacleHeight, // Adjust per obstacle
+        width: null,
+        height: obstacleHeight,
+        type: '', // New attribute to distinguish obstacle types
+        size: '' // For trees, to adjust scoring
+    };
 
-    let placeCactusChance = Math.random(); //0 - 0.9999...
+    // Randomize obstacles (simplified version, extend as needed)
+    if (obstacleChance > .8) {
+        obstacle.img = treeLargeImg;
+        obstacle.width = treeWidthLarge;
+        obstacle.type = 'tree';
+        obstacle.size = 'large';
+    } else if (obstacleChance > .6) {
+        obstacle.img = treeSmallImg;
+        obstacle.width = treeWidthSmall;
+        obstacle.type = 'tree';
+        obstacle.size = 'small';
+    }else if (obstacleChance > .4) {
+        obstacle.img = mountainImg;
+        obstacle.width = obstacleHeight;
+        obstacle.type = 'mountain';
+    }
+    // Add more conditions for other obstacles like mountains, rivers, etc.
 
-    if (placeCactusChance > .90) { //10% you get cactus3
-        cactus.img = cactus3Img;
-        cactus.width = cactus3Width;
-        cactusArray.push(cactus);
-    }
-    else if (placeCactusChance > .70) { //30% you get cactus2
-        cactus.img = cactus2Img;
-        cactus.width = cactus2Width;
-        cactusArray.push(cactus);
-    }
-    else if (placeCactusChance > .50) { //50% you get cactus1
-        cactus.img = cactus1Img;
-        cactus.width = cactus1Width;
-        cactusArray.push(cactus);
-    }
+    obstacleArray.push(obstacle);
 
-    if (cactusArray.length > 5) {
-        cactusArray.shift(); //remove the first element from the array so that the array doesn't constantly grow
+    if (obstacleArray.length > 5) {
+        obstacleArray.shift(); // Keep array size manageable
     }
 }
 
+function startPartyMode() {
+    // Logic to start the party mode
+    partyMode = true;
+    // Here, you can draw many dinos dancing or change the game visuals
+}
+
 function detectCollision(a, b) {
-    return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner
-           a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
-           a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
-           a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+    // Collision detection remains the same
+    return a.x < b.x + b.width &&
+           a.x + a.width > b.x &&
+           a.y < b.y + b.height &&
+           a.y + a.height > b.y;
 }
