@@ -1,6 +1,6 @@
-import Player from "./Player.js";
-import Ground from "./Ground.js";
 import CactiController from "./CactiController.js";
+import Ground from "./Ground.js";
+import Player from "./Player.js";
 import Score from "./Score.js";
 
 const canvas = document.getElementById("game");
@@ -119,12 +119,12 @@ function getScaleRatio() {
 }
 
 function showGameOver() {
-  const fontSize = 70 * scaleRatio;
+  const fontSize = 30 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
-  const x = canvas.width / 4.5;
+  const x = canvas.width / 2 - ctx.measureText("YOU BUMPED INTO TREE!").width / 2;
   const y = canvas.height / 2;
-  ctx.fillText("GAME OVER", x, y);
+  ctx.fillText("YOU BUMPED INTO TREE!", x, y);
 }
 
 function setupGameReset() {
@@ -152,9 +152,9 @@ function showStartGameText() {
   const fontSize = 40 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
-  const x = canvas.width / 14;
+  const x = canvas.width / 2 - ctx.measureText("Start").width / 2;
   const y = canvas.height / 2;
-  ctx.fillText("Tap Screen or Press Space To Start", x, y);
+  ctx.fillText("Start", x, y);
 }
 
 function updateGameSpeed(frameTimeDelta) {
