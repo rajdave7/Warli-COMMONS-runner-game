@@ -30,7 +30,6 @@ let player = null;
 let ground = null;
 let cactiController = null;
 let score = null;
-let resources = 0;
 
 let scaleRatio = null;
 let previousTime = null;

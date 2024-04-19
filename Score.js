@@ -1,7 +1,6 @@
 export default class Score {
   score = 0;
   HIGH_SCORE_KEY = "highScore";
-  resources = 0;
 
   constructor(ctx, scaleRatio) {
     this.ctx = ctx;
@@ -15,7 +14,6 @@ export default class Score {
 
   reset() {
     this.score = 0;
-    this.resources = 0;
   }
 
   setHighScore() {
@@ -35,11 +33,10 @@ export default class Score {
     const scoreX = this.canvas.width - 500 * this.scaleRatio;
     const highScoreX = scoreX - 125 * this.scaleRatio;
 
-    const scorePadded = Math.floor(this.score).toString().padStart(6, 0);
+    const scorePadded = Math.floor(this.score).toString().padStart(6 , 0);
     const highScorePadded = highScore.toString().padStart(6, 0);
-    const resourcesPadded = this.resources.toString().padStart(6, 0);
 
-    this.ctx.fillText(`Resources \n ${resourcesPadded}`, scoreX, y);
+    this.ctx.fillText(`Resources \n ${scorePadded}`, scoreX, y);
     // this.ctx.fillText(`HI ${highScorePadded}`, highScoreX, y);
   }
 }
