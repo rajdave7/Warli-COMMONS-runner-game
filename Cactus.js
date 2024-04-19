@@ -1,11 +1,12 @@
 export default class Cactus {
-  constructor(ctx, x, y, width, height, image) {
+  constructor(ctx, x, y, width, height, image, resources) {
     this.ctx = ctx;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.image = image;
+    this.resources = resources;
   }
 
   update(speed, gameSpeed, frameTimeDelta, scaleRatio) {
@@ -27,6 +28,7 @@ export default class Cactus {
       return true;
     } else {
       return false;
+      resources += 1;
     }
   }
 }
