@@ -30,6 +30,7 @@ let player = null;
 let ground = null;
 let cactiController = null;
 let score = null;
+let resources = 0;
 
 let scaleRatio = null;
 let previousTime = null;
@@ -78,7 +79,8 @@ function createSprites() {
     ctx,
     cactiImages,
     scaleRatio,
-    GROUND_AND_CACTUS_SPEED
+    GROUND_AND_CACTUS_SPEED,
+    resources
   );
 
   score = new Score(ctx, scaleRatio);

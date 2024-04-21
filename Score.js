@@ -1,6 +1,7 @@
 export default class Score {
   score = 0;
   HIGH_SCORE_KEY = "highScore";
+  resource = 0;
 
   constructor(ctx, scaleRatio) {
     this.ctx = ctx;
@@ -14,14 +15,15 @@ export default class Score {
 
   reset() {
     this.score = 0;
+    this.resource = 0;
   }
 
-  setHighScore() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-    if (this.score > highScore) {
-      localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
-    }
-  }
+  // setHighScore() {
+  //   const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+  //   if (this.score > highScore) {
+  //     localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+  //   }
+  // }
 
   draw() {
     const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
@@ -33,10 +35,11 @@ export default class Score {
     const scoreX = this.canvas.width - 500 * this.scaleRatio;
     const highScoreX = scoreX - 125 * this.scaleRatio;
 
-    const scorePadded = Math.floor(this.score).toString().padStart(6 , 0);
+    const scorePadded = Math.floor(this.score).toString().padStart(6, 0);
     const highScorePadded = highScore.toString().padStart(6, 0);
+    const resourcePadded = this.resource.toString().padStart(6, 0);
 
-    this.ctx.fillText(`Resources \n ${scorePadded}`, scoreX, y);
+    this.ctx.fillText(`Resources \n ${resourcePadded}`, scoreX, y);
     // this.ctx.fillText(`HI ${highScorePadded}`, highScoreX, y);
   }
 }

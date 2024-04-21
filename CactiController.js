@@ -7,12 +7,13 @@ export default class CactiController {
   nextCactusInterval = null;
   cacti = [];
 
-  constructor(ctx, cactiImages, scaleRatio, speed) {
+  constructor(ctx, cactiImages, scaleRatio, speed, resourcesCounter) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.cactiImages = cactiImages;
     this.scaleRatio = scaleRatio;
     this.speed = speed;
+    this.resourcesCounter = resourcesCounter;
 
     this.setNextCactusTime();
   }
@@ -58,7 +59,13 @@ export default class CactiController {
       cactus.update(this.speed, gameSpeed, frameTimeDelta, this.scaleRatio);
     });
 
-    this.cacti = this.cacti.filter((cactus) => cactus.x > -cactus.width);
+    // Check if cactus is dodged and increment resources counter
+    this.cacti.forEach((cactus, index) => {
+      if (cactus.x + cactus.width < 0) {
+        this.resourcesCounter++;
+        this.cacti.splice(index, 1); // Remove dodged cactus from array
+      }
+    });
   }
 
   draw() {
@@ -71,5 +78,6 @@ export default class CactiController {
 
   reset() {
     this.cacti = [];
+    this.resourcesCounter = 0; // Reset resources counter
   }
 }
