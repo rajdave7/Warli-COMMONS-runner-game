@@ -20,9 +20,9 @@ const GROUND_HEIGHT = 24;
 const GROUND_AND_CACTUS_SPEED = 0.35;
 
 const CACTI_CONFIG = [
-  { width: 148 / 3, height: 150 / 1.5, image: "img/treeSmall.png" },
-  { width: 198 / 3, height: 150 / 1.5, image: "img/treeSmall.png" },
-  { width: 168 / 3, height: 150 / 1.5, image: "img/treeSmall.png" },
+  { width: 148 / 3, height: 200 / 1.5, image: "img/treeSmall.png" },
+  { width: 198 / 3, height: 200 / 1.5, image: "img/treeSmall.png" },
+  { width: 168 / 3, height: 200 / 1.5, image: "img/treeSmall.png" },
 ];
 
 //Game Objects
@@ -216,7 +216,8 @@ function gameLoop(currentTime) {
   score.draw();
 
   if (gameOver) {
-    showGameOver();
+    // showGameOver();
+    dance();
   }
 
   if (waitingToStart) {
