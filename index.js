@@ -124,10 +124,24 @@ function showGameOver() {
   const fontSize = 30 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
-  const x = canvas.width / 2 - ctx.measureText("YOU BUMPED INTO TREE!").width / 2;
+  const x =
+    canvas.width / 2 - ctx.measureText("YOU BUMPED INTO TREE!").width / 2;
   const y = canvas.height / 2;
   ctx.fillText("YOU BUMPED INTO TREE!", x, y);
 }
+
+function dance() {
+  // show the gif in public folder
+  const img = new Image();
+  img.src = "public/dance.gif";
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+}
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    setupGameReset();
+  }
+});
 
 function setupGameReset() {
   if (!hasAddedEventListenersForRestart) {
@@ -190,7 +204,8 @@ function gameLoop(currentTime) {
 
   if (!gameOver && cactiController.collideWith(player)) {
     gameOver = true;
-    setupGameReset();
+    // setupGameReset();
+    dance();
     score.setHighScore();
   }
 
