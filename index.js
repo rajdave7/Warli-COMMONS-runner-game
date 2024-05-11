@@ -136,7 +136,7 @@ spriteSheet.src = 'public/dance_sprite.png';
 // Define animation parameters
 const frameWidth = 600; // Width of each frame in the sprite sheet
 const frameHeight = 336; // Height of each frame in the sprite sheet
-const numFrames = 9; // Total number of frames in the sprite sheet
+const numFrames = 5; // Total number of frames in the sprite sheet
 let currentFrame = 0; // Current frame index
 let animationSpeed = 1500; // Milliseconds per frame
 
