@@ -121,7 +121,7 @@ function getScaleRatio() {
 }
 
 function showGameOver() {
-  const fontSize = 30 * scaleRatio;
+  const fontSize = 30 * scaleRatio;dance;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
   const x =
@@ -134,8 +134,8 @@ const spriteSheet = new Image();
 spriteSheet.src = 'public/dance_sprite.png';
 
 // Define animation parameters
-const frameWidth = 1000; // Width of each frame in the sprite sheet
-const frameHeight = 1000; // Height of each frame in the sprite sheet
+const frameWidth = 600; // Width of each frame in the sprite sheet
+const frameHeight = 336; // Height of each frame in the sprite sheet
 const numFrames = 9; // Total number of frames in the sprite sheet
 let currentFrame = 0; // Current frame index
 let animationSpeed = 1100; // Milliseconds per frame
@@ -145,16 +145,22 @@ function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Draw current frame
+  const canvasCenterX = canvas.width / 2;
+  const canvasCenterY = canvas.height / 2;
+  const frameCenterX = frameWidth / 2;
+  const frameCenterY = frameHeight / 2;
+  const destinationX = canvasCenterX - frameCenterX;
+  const destinationY = canvasCenterY - frameCenterY;
   ctx.drawImage(
-      spriteSheet,
-      currentFrame * frameWidth, // Source X coordinate
-      0, // Source Y coordinate (assuming all frames are in the same row)
-      frameWidth, // Source width
-      frameHeight, // Source height
-      0, // Destination X coordinate
-      0, // Destination Y coordinate
-      frameWidth, // Destination width
-      frameHeight // Destination height
+    spriteSheet,
+    currentFrame * frameWidth, // Source X coordinate
+    0, // Source Y coordinate (assuming all frames are in the same row)
+    frameWidth, // Source width
+    frameHeight, // Source height
+    destinationX, // Destination X coordinate
+    destinationY, // Destination Y coordinate
+    frameWidth, // Destination width
+    frameHeight // Destination height
   );
 
   // Move to the next frame
