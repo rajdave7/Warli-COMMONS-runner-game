@@ -138,19 +138,23 @@ const frameWidth = 600; // Width of each frame in the sprite sheet
 const frameHeight = 336; // Height of each frame in the sprite sheet
 const numFrames = 9; // Total number of frames in the sprite sheet
 let currentFrame = 0; // Current frame index
-let animationSpeed = 1100; // Milliseconds per frame
+let animationSpeed = 1500; // Milliseconds per frame
 
 function render() {
   // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw current frame
+  // Calculate the scaled frame dimensions
+  const scaledFrameWidth = frameWidth * scaleRatio;
+  const scaledFrameHeight = frameHeight * scaleRatio;
+
+  // Calculate the destination position
   const canvasCenterX = canvas.width / 2;
   const canvasCenterY = canvas.height / 2;
-  const frameCenterX = frameWidth / 2;
-  const frameCenterY = frameHeight / 2;
-  const destinationX = canvasCenterX - frameCenterX;
-  const destinationY = canvasCenterY - frameCenterY;
+  const destinationX = canvasCenterX - scaledFrameWidth / 2;
+  const destinationY = canvasCenterY - scaledFrameHeight / 2;
+
+  // Draw current frame
   ctx.drawImage(
     spriteSheet,
     currentFrame * frameWidth, // Source X coordinate
@@ -159,8 +163,8 @@ function render() {
     frameHeight, // Source height
     destinationX, // Destination X coordinate
     destinationY, // Destination Y coordinate
-    frameWidth, // Destination width
-    frameHeight // Destination height
+    scaledFrameWidth, // Destination width
+    scaledFrameHeight // Destination height
   );
 
   // Move to the next frame
