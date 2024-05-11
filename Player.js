@@ -25,6 +25,8 @@ export default class Player {
     this.standingStillImage = new Image();
     this.standingStillImage.src = "img/stickman_normal.png";
     this.image = this.standingStillImage;
+    this.jump_image = new Image();
+    this.jump_image.src = "img/jump_figure.png";
 
     const dinoRunImage1 = new Image();
     dinoRunImage1.src = "img/stickman_normal.png";
@@ -74,7 +76,7 @@ export default class Player {
     this.run(gameSpeed, frameTimeDelta);
 
     if (this.jumpInProgress) {
-      this.image = this.standingStillImage;
+      this.image = this.jump_image;
     }
 
     this.jump(frameTimeDelta);

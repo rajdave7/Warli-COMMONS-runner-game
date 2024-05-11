@@ -20,9 +20,9 @@ const GROUND_HEIGHT = 24;
 const GROUND_AND_CACTUS_SPEED = 0.35;
 
 const CACTI_CONFIG = [
-  { width: 148 / 3, height: 200 / 1.5, image: "img/treeSmall.png" },
-  { width: 198 / 3, height: 200 / 1.5, image: "img/treeSmall.png" },
-  { width: 168 / 3, height: 200 / 1.5, image: "img/treeSmall.png" },
+  { width: 148 / 3, height: 170 / 1.5, image: "img/treeSmall.png" },
+  { width: 198 / 3, height: 170 / 1.5, image: "img/treeSmall.png" },
+  { width: 168 / 3, height: 170 / 1.5, image: "img/treeSmall.png" },
 ];
 
 //Game Objects
@@ -130,11 +130,49 @@ function showGameOver() {
   ctx.fillText("YOU BUMPED INTO TREE!", x, y);
 }
 
+const spriteSheet = new Image();
+spriteSheet.src = 'public/dance_sprite.png';
+
+// Define animation parameters
+const frameWidth = 1000; // Width of each frame in the sprite sheet
+const frameHeight = 1000; // Height of each frame in the sprite sheet
+const numFrames = 9; // Total number of frames in the sprite sheet
+let currentFrame = 0; // Current frame index
+let animationSpeed = 1100; // Milliseconds per frame
+
+function render() {
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw current frame
+  ctx.drawImage(
+      spriteSheet,
+      currentFrame * frameWidth, // Source X coordinate
+      0, // Source Y coordinate (assuming all frames are in the same row)
+      frameWidth, // Source width
+      frameHeight, // Source height
+      0, // Destination X coordinate
+      0, // Destination Y coordinate
+      frameWidth, // Destination width
+      frameHeight // Destination height
+  );
+
+  // Move to the next frame
+  currentFrame = (currentFrame + 1) % numFrames;
+
+  // Request next frame render
+  setTimeout(render, animationSpeed);
+}
+
+// danceGif.onload = function () {
+//   // Start the game loop once the GIF is loaded
+//   requestAnimationFrame(gameLoop);
+// };
 function dance() {
   // show the gif in public folder
-  const img = new Image();
-  img.src = "public/dance.gif";
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+  // clearScreen();
+  render();
 }
 
 document.addEventListener("keydown", function (event) {
@@ -183,6 +221,9 @@ function clearScreen() {
 }
 
 function gameLoop(currentTime) {
+  if (gameOver) {
+    dance();
+  }
   if (previousTime === null) {
     previousTime = currentTime;
     requestAnimationFrame(gameLoop);
@@ -217,6 +258,10 @@ function gameLoop(currentTime) {
 
   if (gameOver) {
     // showGameOver();
+    // const gameOverImage = document.getElementById("gameOverImage");
+    // gameOverImage.src = "public/dance.gif";
+    // const gameOverOverlay = document.querySelector(".game-over-overlay");
+    // gameOverOverlay.style.display = "block";
     dance();
   }
 

@@ -18,12 +18,12 @@ export default class Score {
     this.resource = 0;
   }
 
-  // setHighScore() {
-  //   const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-  //   if (this.score > highScore) {
-  //     localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
-  //   }
-  // }
+  setHighScore() {
+    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+    if (this.score > highScore) {
+      localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+    }
+  }
 
   draw() {
     const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
