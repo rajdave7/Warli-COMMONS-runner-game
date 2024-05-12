@@ -350,7 +350,7 @@ canvas.addEventListener("click", () => {
   } else {
     res = res + 1;
   }
-  if (res > 1000) {
+  if (res > 100000) {
     // console.log("ohno");
     // ctx.draw()
     gameOver = true;
