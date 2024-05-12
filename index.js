@@ -17,11 +17,11 @@ const MAX_JUMP_HEIGHT = GAME_HEIGHT;
 const MIN_JUMP_HEIGHT = 150;
 const GROUND_WIDTH = 2400;
 const GROUND_HEIGHT = 24;
-const GROUND_AND_CACTUS_SPEED = 0.35;
+const GROUND_AND_CACTUS_SPEED = 0.25;
 
 const CACTI_CONFIG = [
   { width: 148 / 3, height: 170 / 1.5, image: "img/treeSmall.png" },
-  { width: 198 / 3, height: 170 / 1.5, image: "img/treeSmall.png" },
+  { width: 230 / 3, height: 120 / 1.5, image: "public/animal_img.png" },
   { width: 168 / 3, height: 170 / 1.5, image: "img/treeSmall.png" },
 ];
 
@@ -121,7 +121,8 @@ function getScaleRatio() {
 }
 
 function showGameOver() {
-  const fontSize = 30 * scaleRatio;dance;
+  const fontSize = 30 * scaleRatio;
+  dance;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
   const x =
@@ -131,14 +132,14 @@ function showGameOver() {
 }
 
 const spriteSheet = new Image();
-spriteSheet.src = 'public/dance_sprite.png';
+spriteSheet.src = "public/dance_sprite.png";
 
 // Define animation parameters
 const frameWidth = 600; // Width of each frame in the sprite sheet
 const frameHeight = 336; // Height of each frame in the sprite sheet
-const numFrames = 5; // Total number of frames in the sprite sheet
+const numFrames = 4; // Total number of frames in the sprite sheet
 let currentFrame = 0; // Current frame index
-let animationSpeed = 1500; // Milliseconds per frame
+let animationSpeed = 5100; // Milliseconds per frame
 
 function render() {
   // Clear canvas
@@ -230,6 +231,26 @@ function clearScreen() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+const videoElement = document.getElementById("gameOverVideo");
+
+// Function to show the game over video
+function showGameOverVideo() {
+  // Show the video element
+  videoElement.style.display = "block";
+  // Play the video
+  videoElement.play();
+}
+
+const audioElement = document.getElementById("backgroundAudio");
+
+// Function to play the background audio
+function playBackgroundAudio() {
+  // Show the audio element
+  audioElement.style.display = "block";
+  // Play the audio
+  audioElement.play();
+}
+
 function gameLoop(currentTime) {
   if (gameOver) {
     dance();
@@ -243,8 +264,9 @@ function gameLoop(currentTime) {
   previousTime = currentTime;
 
   clearScreen();
-
-  if (!gameOver && !waitingToStart) {
+  let clickCount = 0;
+  let prevClickCount = clickCount;
+  if (!gameOver && !waitingToStart && prevClickCount == clickCount) {
     //Update game objects
     ground.update(gameSpeed, frameTimeDelta);
     cactiController.update(gameSpeed, frameTimeDelta);
@@ -265,15 +287,36 @@ function gameLoop(currentTime) {
   cactiController.draw();
   player.draw();
   score.draw();
+  const highScore = Number(localStorage.getItem(5000));
+  const y = 20 * getScaleRatio();
 
+  const fontSize = 20 * getScaleRatio();
+  ctx.font = `${fontSize}px serif`;
+  ctx.fillStyle = "#525250";
+  const scoreX = canvas.width - 500 * getScaleRatio();
+  const highScoreX = scoreX - 125 * getScaleRatio();
+
+  const scorePadded = Math.floor(score).toString().padStart(6, 0);
+  const highScorePadded = highScore.toString().padStart(6, 0);
+  // const resourcePadded = resource.toString().padStart(6, 0);
+
+  ctx.fillText(`Resources \n ${res}`, scoreX, y);
+  playBackgroundAudio();
   if (gameOver) {
     // showGameOver();
     // const gameOverImage = document.getElementById("gameOverImage");
     // gameOverImage.src = "public/dance.gif";
     // const gameOverOverlay = document.querySelector(".game-over-overlay");
     // gameOverOverlay.style.display = "block";
-    dance();
+    // dance();
+    showGameOverVideo();
   }
+  function redirectToStartPage() {
+    window.location.href = "startPage.html";
+  }
+
+  // Add event listener to detect when the video playback ends
+  videoElement.addEventListener("ended", redirectToStartPage);
 
   if (waitingToStart) {
     showStartGameText();
@@ -286,3 +329,22 @@ requestAnimationFrame(gameLoop);
 
 window.addEventListener("keyup", reset, { once: true });
 window.addEventListener("touchstart", reset, { once: true });
+// const _this = this; // Store reference to 'this'
+let clickCount = 0;
+let res = 0;
+// let score = 0;
+canvas.addEventListener("click", () => {
+  // Increment the click count variable
+  clickCount++;
+  // Log the updated click count to the console
+  console.log("Click count:", clickCount);
+  if (clickCount > 100) {
+    res = res * 2;
+  } else {
+    res = res + 1;
+  }
+  if (res > 1000) {
+    // console.log("ohno"); 
+    gameOver = true;
+  }
+});

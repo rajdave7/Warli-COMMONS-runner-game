@@ -24,7 +24,7 @@ export default class Cactus {
       sprite.y < this.y + this.height / adjustBy &&
       sprite.height + sprite.y / adjustBy > this.y
     ) {
-      return true;
+      return false;
     } else {
       return false;
     }

@@ -26,6 +26,20 @@ export default class CactiController {
 
     this.nextCactusInterval = num;
   }
+  handleClickEvent(x, y) {
+    this.cacti.forEach((cactus) => {
+      if (
+        x >= cactus.x &&
+        x <= cactus.x + cactus.width &&
+        y >= cactus.y &&
+        y <= cactus.y + cactus.height
+      ) {
+        // Increment score when clicked on cactus
+        this.resourcesCounter++;
+        score.update(0, true); // Pass true to indicate a tree was clicked
+      }
+    });
+  }
 
   getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);

@@ -3,14 +3,21 @@ export default class Score {
   HIGH_SCORE_KEY = "highScore";
   resource = 0;
 
-  constructor(ctx, scaleRatio) {
+  constructor(ctx, scaleRatio, clickCount) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.scaleRatio = scaleRatio;
+    this.clickCount = clickCount; // Pass the clickCount here
   }
 
-  update(frameTimeDelta) {
-    this.score += frameTimeDelta * 0.01;
+  update(frameTimeDelta, clickCount) {
+    // Increment score when a tree is clicked
+    if (clickCount>200) {
+      this.score=this.score*2;  
+    }
+    else{
+      this.score = this.score + 1;
+    }
   }
 
   reset() {
@@ -19,27 +26,17 @@ export default class Score {
   }
 
   setHighScore() {
+    // Update the clickCount when a cactus is clicked
     const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
     if (this.score > highScore) {
       localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+      // Increment the clickCount when high score is updated
+      this.clickCount++;
     }
   }
 
   draw() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-    const y = 20 * this.scaleRatio;
-
-    const fontSize = 20 * this.scaleRatio;
-    this.ctx.font = `${fontSize}px serif`;
-    this.ctx.fillStyle = "#525250";
-    const scoreX = this.canvas.width - 500 * this.scaleRatio;
-    const highScoreX = scoreX - 125 * this.scaleRatio;
-
-    const scorePadded = Math.floor(this.score).toString().padStart(6, 0);
-    const highScorePadded = highScore.toString().padStart(6, 0);
-    const resourcePadded = this.resource.toString().padStart(6, 0);
-
-    this.ctx.fillText(`Resources \n ${resourcePadded}`, scoreX, y);
+    
     // this.ctx.fillText(`HI ${highScorePadded}`, highScoreX, y);
   }
 }
