@@ -345,7 +345,7 @@ canvas.addEventListener("click", () => {
   clickCount++;
   // Log the updated click count to the console
   console.log("Click count:", clickCount);
-  if (clickCount > 2) {
+  if (clickCount > 50) {
     res = res * 2;
   } else {
     res = res + 1;
