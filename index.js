@@ -219,7 +219,7 @@ function showStartGameText() {
   ctx.fillStyle = "grey";
   const x = canvas.width / 2 - ctx.measureText("Start").width / 2;
   const y = canvas.height / 2;
-  ctx.fillText("Start", x, y);
+  ctx.fillText("Space to Start", x, y);
 }
 
 function updateGameSpeed(frameTimeDelta) {
