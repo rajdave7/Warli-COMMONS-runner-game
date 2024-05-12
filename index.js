@@ -250,11 +250,12 @@ function playBackgroundAudio() {
   // Play the audio
   audioElement.play();
 }
+function stopBackgroundAudio() {
+  const backgroundAudio = document.getElementById("backgroundAudio");
+  backgroundAudio.pause(); // Pause the background audio
+}
 
 function gameLoop(currentTime) {
-  if (gameOver) {
-    dance();
-  }
   if (previousTime === null) {
     previousTime = currentTime;
     requestAnimationFrame(gameLoop);
@@ -302,6 +303,10 @@ function gameLoop(currentTime) {
 
   ctx.fillText(`Resources \n ${res}`, scoreX, y);
   playBackgroundAudio();
+  function showCongratulationsMessage() {
+    const congratulationsDiv = document.getElementById("congratulations");
+    congratulationsDiv.style.display = "block";
+  }
   if (gameOver) {
     // showGameOver();
     // const gameOverImage = document.getElementById("gameOverImage");
@@ -309,7 +314,9 @@ function gameLoop(currentTime) {
     // const gameOverOverlay = document.querySelector(".game-over-overlay");
     // gameOverOverlay.style.display = "block";
     // dance();
-    showGameOverVideo();
+    stopBackgroundAudio();
+    showCongratulationsMessage();
+    setTimeout(showGameOverVideo, 2000);
   }
   function redirectToStartPage() {
     window.location.href = "startPage.html";
@@ -338,13 +345,14 @@ canvas.addEventListener("click", () => {
   clickCount++;
   // Log the updated click count to the console
   console.log("Click count:", clickCount);
-  if (clickCount > 100) {
+  if (clickCount > 2) {
     res = res * 2;
   } else {
     res = res + 1;
   }
   if (res > 1000) {
-    // console.log("ohno"); 
+    // console.log("ohno");
+    // ctx.draw()
     gameOver = true;
   }
 });
